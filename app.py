@@ -29,6 +29,35 @@ def about():
     return render_template('about.html')
 
 
+@app.route('/posts/<int:id>/delete')
+def post_delete(id):
+    article = Article.query.get_or_404(id)
+    try:
+        db.session.delete(article)
+        db.session.commit()
+        return redirect('/posts')
+    except:
+        return "Something went wrong"
+
+
+@app.route('/posts/<int:id>/edit', methods=['POST', 'GET'])
+def post_edit(id):
+    article = db.session.query(Article).get(id)
+    if request.method == "POST":
+        article.title = request.form["title"]
+        article.intro = request.form["intro"]
+        article.text = request.form["title"]
+
+        try:
+            db.session.commit()
+            return redirect("/posts")
+
+        except:
+            return "Error"
+    else:
+        return render_template("post_update.html", article=article)
+
+
 @app.route('/posts')
 def posts():
     articles = Article.query.order_by(Article.date.desc()).all()
