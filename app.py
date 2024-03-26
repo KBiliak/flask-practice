@@ -64,9 +64,14 @@ def posts():
     return render_template('posts.html', articles=articles)
 
 
+# @app.route('/posts/<int:id>')
+# def posts_read(id):
+#     article = Article.query.get(id)
+#     return render_template('posts_detail.html', article=article)
+
 @app.route('/posts/<int:id>')
 def posts_read(id):
-    article = Article.query.get(id)
+    article = db.session.query(Article).get(id)
     return render_template('posts_detail.html', article=article)
 
 
